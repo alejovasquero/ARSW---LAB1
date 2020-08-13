@@ -1,10 +1,39 @@
-# Project Title
+# Arquitecturas de Software
+# Laboratorio 1 Paralelismo y Concurrencia
 
-One Paragraph of project description goes here
+## Integrantes
+- David Alejandro Vasquez Carreño
+- Michael Jefferson Ballesteros Coca
 
-## Getting Started
+____________
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## PARTE 1 - Introduction to threads in JAVA
+
+1. In agreement with the lectures, complete the classes CountThread, so that they define the life cycle of a thread that prints the numbers between A and B on the screen.
+  
+  ```
+Codigo
+  ```
+
+2. Complete the main method of the CountMainThreads class so that: 
+  1. Create 3 threads of type CountThread, assigning the first interval [0..99], the second [99..199], and the third [200..299]. 
+  
+  ```
+Codigo
+  ```
+  
+  2. Start the three threads with start(). Run and check the output on the screen. 
+  
+  
+  images
+  
+  
+  
+  3. Change the beginning with start() to run(). How does the output change? Why?
+  
+  images
+
+________________
 
 ### Prerequisites
 
