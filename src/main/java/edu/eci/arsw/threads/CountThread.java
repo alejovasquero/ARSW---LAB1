@@ -9,6 +9,18 @@ package edu.eci.arsw.threads;
  *
  * @author hcadavid
  */
-public class CountThread {
-    
+public class CountThread extends Thread{
+
+    private int left;
+    private int right;
+    public CountThread(int left, int right){
+        super();
+        this.left=left;
+        this.right=right;
+    }
+
+    @Override
+    public void run() {
+        
+    }
 }
