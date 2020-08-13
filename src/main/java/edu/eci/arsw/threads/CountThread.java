@@ -21,6 +21,8 @@ public class CountThread extends Thread{
 
     @Override
     public void run() {
-        
+        for(int i=left; i<right ;i++){
+            System.out.println(i);
+        }
     }
 }
