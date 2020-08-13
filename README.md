@@ -24,15 +24,15 @@ Codigo
   
   2. Start the three threads with start(). Run and check the output on the screen. 
   
-  
-  images
+![hilo3](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d6-3f3f78121f80490c797c4f85d0b79d05/views/imgo)
+![hilo4](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d8-c43fec24eddee66a980f147066153f21/views/imgo)
   
   
   
   3. Change the beginning with start() to run(). How does the output change? Why?
   
-  images
-
+![hilo1](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d1-ce3c2ec702875173bcce5447151ecd53/views/imgo)
+![hilo2](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d4-90ff2c8492e87b0e3ab64fc02c5d227c/views/imgo)
 ________________
 
 ### Prerequisites
