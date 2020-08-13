@@ -1,10 +1,50 @@
-# Project Title
+# Arquitecturas de Software
+# Laboratorio 1 Paralelismo y Concurrencia
 
-One Paragraph of project description goes here
+## Integrantes
+- David Alejandro Vasquez Carreño
+- Michael Jefferson Ballesteros Coca
 
-## Getting Started
+____________
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## PARTE 1 - Introduction to threads in JAVA
+
+1. In agreement with the lectures, complete the classes CountThread, so that they define the life cycle of a thread that prints the numbers between A and B on the screen.
+  
+  ```
+Codigo
+  ```
+
+2. Complete the main method of the CountMainThreads class so that: 
+  1. Create 3 threads of type CountThread, assigning the first interval [0..99], the second [99..199], and the third [200..299]. 
+  
+  ```
+Codigo
+  ```
+  
+  2. Start the three threads with start(). Run and check the output on the screen. 
+  
+  Cuando el hilo se ejecuta con el metodo start() se crea un nuevo subproceso. Podemos ver que ejecutando varias veces el metodo principal, diferentes resultados se ven reflejados, ya que no estan sincronizados por el procesador. Vemos que se puede ejecutar el tercer hilo de primeras, mientras que el primero se ejecuta despues
+  
+  ***los hilos se interrumpen***
+![hilo3](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(1).png)
+
+***El primer hilo se ve interrumpido por el segundo***
+![hilo4](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(2).png)
+
+***El primer hilo se ve interrumpido por el tercero***
+![hilo5](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart.png)
+  
+  
+  
+  3. Change the beginning with start() to run(). How does the output change? Why?
+  
+Usando run() para ejecutar los hilos, podemos verificar que se ejecutan sobre el hilo principal y el procesador controla los hilos, permitiendo que se ejecuten dependiendo de la orden que tienen.
+
+![hilo2](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(2).png)
+
+![hilo1](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(1).png)
+________________
 
 ### Prerequisites
 
