@@ -24,15 +24,26 @@ Codigo
   
   2. Start the three threads with start(). Run and check the output on the screen. 
   
-![hilo3](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d6-3f3f78121f80490c797c4f85d0b79d05/views/imgo)
-![hilo4](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d8-c43fec24eddee66a980f147066153f21/views/imgo)
+  Cuando el hilo se ejecuta con el metodo start() se crea un nuevo subproceso. Podemos ver que ejecutando varias veces el metodo principal, diferentes resultados se ven reflejados, ya que no estan sincronizados por el procesador. Vemos que se puede ejecutar el tercer hilo de primeras, mientras que el primero se ejecuta despues
+  
+  ***los hilos se interrumpen***
+![hilo3](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(1).png)
+
+***El primer hilo se ve interrumpido por el segundo***
+![hilo4](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(2).png)
+
+***El primer hilo se ve interrumpido por el tercero***
+![hilo5](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart.png)
   
   
   
   3. Change the beginning with start() to run(). How does the output change? Why?
   
-![hilo1](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d1-ce3c2ec702875173bcce5447151ecd53/views/imgo)
-![hilo2](https://us-prod.asyncgw.teams.microsoft.com/v1/objects/0-eus-d4-90ff2c8492e87b0e3ab64fc02c5d227c/views/imgo)
+Usando run() para ejecutar los hilos, podemos verificar que se ejecutan sobre el hilo principal y el procesador controla los hilos, permitiendo que se ejecuten dependiendo de la orden que tienen.
+
+![hilo2](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(2).png)
+
+![hilo1](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(1).png)
 ________________
 
 ### Prerequisites
