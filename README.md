@@ -39,9 +39,11 @@ Codigo
   
   3. Change the beginning with start() to run(). How does the output change? Why?
   
-![hilo1](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(1).png)
+Usando run() para ejecutar los hilos, podemos verificar que se ejecutan sobre el hilo principal y el procesador controla los hilos, permitiendo que se ejecuten dependiendo de la orden que tienen.
 
 ![hilo2](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(2).png)
+
+![hilo1](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(1).png)
 ________________
 
 ### Prerequisites
