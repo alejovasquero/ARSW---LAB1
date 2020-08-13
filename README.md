@@ -24,10 +24,15 @@ Codigo
   
   2. Start the three threads with start(). Run and check the output on the screen. 
   
+  Cuando el hilo se ejecuta con el metodo start() se crea un nuevo subproceso. Podemos ver que ejecutando varias veces el metodo principal, diferentes resultados se ven reflejados, ya que no estan sincronizados por el procesador. Vemos que se puede ejecutar el tercer hilo de primeras, mientras que el primero se ejecuta despues
+  
+  ***los hilos se interrumpen***
 ![hilo3](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(1).png)
 
+***El primer hilo se ve interrumpido por el segundo***
 ![hilo4](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(2).png)
 
+***El primer hilo se ve interrumpido por el tercero***
 ![hilo5](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart.png)
   
   
