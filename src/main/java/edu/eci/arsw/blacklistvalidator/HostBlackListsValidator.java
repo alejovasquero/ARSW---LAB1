@@ -8,6 +8,7 @@ package edu.eci.arsw.blacklistvalidator;
 import edu.eci.arsw.spamkeywordsdatasource.HostBlacklistsDataSourceFacade;
 import edu.eci.arsw.threads.BlackListThread;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,75 +34,66 @@ public class HostBlackListsValidator {
      * @return  Blacklists numbers where the given host's IP address was found.
      */
     public List<Integer> checkHost(String ipaddress, int threads){
-        
-        LinkedList<Integer> blackListOcurrences=new LinkedList<>();
-        
         int ocurrencesCount=0;
-        
+
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
-        
         int checkedListsCount=0;
         int n = skds.getRegisteredServersCount()-1;
-
-        BlackListThread.ocurrences.set(0);
-        BlackListThread.listsChecked.set(0);
-        ArrayList<BlackListThread> tr = new ArrayList<BlackListThread>();
-        if(threads == 1){
-            //Run thread (0, n)
-            BlackListThread one = new BlackListThread(0, n ,ipaddress);
-            tr.add(one);
-            one.start();
-        } else if(threads == 2){
-            //Run thread (0, ndiv2) (ndiv2 +1 , n)
-            BlackListThread one = new BlackListThread(0, n/2, ipaddress);
-            BlackListThread two = new BlackListThread( n/2 +1, n, ipaddress);
-            tr.add(one);
-            tr.add(two);
-            one.start();
-            two.start();
-        } else if (threads > 2) {
-            //Run thread (0, ndivt) ( (threads-1) (ndiv2) +1 , n)
-            BlackListThread one = new BlackListThread(0, n/threads, ipaddress);
-            BlackListThread two = new BlackListThread( (threads-1)*(n/threads) +1, n, ipaddress);
-            tr.add(one);
-            tr.add(two);
-            one.start();
-            two.start();
-            BlackListThread t = null;
-            for(int i=1; i<threads-1; i++){
-                t = new BlackListThread(i*(n/threads)+1, (i+1)*(n/threads), ipaddress);
-                tr.add(t);
-                t.start();
-                //Run thread (i*(n div t) +1 , (i+1)*(n div t))
-            }
-        }
-
-        for(BlackListThread t : tr){
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-
-            }
-        }
-        System.out.println("All threds done...");
-        System.out.println(BlackListThread.ocurrences.get());
-        System.out.println(BlackListThread.listsChecked.get());
-        ocurrencesCount = BlackListThread.ocurrences.get();
-        
+        List<BlackListThread> tr = createCheckThreads(n, threads, ipaddress);
+        solveWithThreads(tr);
+        checkedListsCount = BlackListThread.listsChecked.get();
         if (ocurrencesCount>=BLACK_LIST_ALARM_COUNT){
             skds.reportAsNotTrustworthy(ipaddress);
         }
         else{
             skds.reportAsTrustworthy(ipaddress);
         }
-        System.out.println(BlackListThread.listsChecked.get());
-        System.out.println(checkedListsCount);
         LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
-        
-        return blackListOcurrences;
+        return joinOcurrences(tr);
     }
     
-    
+
+
+    private List<BlackListThread> createCheckThreads(int servers, int threads, String ipaddress){
+        List<BlackListThread> tr = new ArrayList<BlackListThread>();
+        int n = servers;
+        if(threads == 1){
+            tr.add(new BlackListThread(0, n ,ipaddress));
+        } else if(threads == 2){
+            tr.add(new BlackListThread(0, n/2, ipaddress));
+            tr.add(new BlackListThread( n/2 +1, n, ipaddress));
+        } else if (threads > 2) {
+            tr.add(new BlackListThread(0, n/threads, ipaddress));
+            for(int i=1; i<threads-1; i++){
+                tr.add(new BlackListThread(i*(n/threads)+1, (i+1)*(n/threads), ipaddress));
+            }
+            tr.add(new BlackListThread( (threads-1)*(n/threads) +1, n, ipaddress));
+        }
+        return tr;
+    }
+
+    private void solveWithThreads(List<BlackListThread> list){
+        BlackListThread.listsChecked.set(0);
+        for(BlackListThread t: list){
+            t.start();
+        }
+        for(BlackListThread t: list){
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+            }
+        }
+    }
+
+    private List<Integer> joinOcurrences(List<BlackListThread> list){
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+        for(BlackListThread t: list){
+            ans.addAll(t.getList());
+        }
+        return ans;
+    }
+
     private static final Logger LOG = Logger.getLogger(HostBlackListsValidator.class.getName());
     
     public static int getBlackListAlarmCount(){

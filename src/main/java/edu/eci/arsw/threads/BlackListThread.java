@@ -10,8 +10,8 @@ public class BlackListThread extends Thread{
     private int left;
     private int right;
     private String ip;
-    public static AtomicInteger listsChecked = new AtomicInteger();
-    public static AtomicInteger ocurrences = new AtomicInteger();
+    public static AtomicInteger listsChecked = new AtomicInteger(0);
+    private ArrayList<Integer> list;
 
     public BlackListThread(int left, int right, String ipAddress){
         this.left = left;
@@ -22,16 +22,19 @@ public class BlackListThread extends Thread{
 
     @Override
     public void run() {
-        System.out.printf("%d %d\n", left, right);
-        ArrayList<Integer> lists = new ArrayList<Integer>();
-        for(int i = left; i<=right && ocurrences.get() < HostBlackListsValidator.getBlackListAlarmCount() ; i++){
+        list = new ArrayList<Integer>();
+        boolean follow = true;
+        boolean isDanger;
+        for(int i = left; i<=right; i++){
+            isDanger = HostBlacklistsDataSourceFacade.getInstance().isInBlackListServer(i, ip);
             listsChecked.incrementAndGet();
-            if (HostBlacklistsDataSourceFacade.getInstance().isInBlackListServer(i, ip)){
-                lists.add(i);
-                ocurrences.incrementAndGet();
-
+            if(isDanger){
+                list.add(i);
             }
         }
-        System.out.println("I am done...");
+    }
+
+    public ArrayList<Integer> getList(){
+        return list;
     }
 }

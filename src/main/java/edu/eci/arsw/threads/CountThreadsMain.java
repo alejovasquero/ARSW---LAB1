@@ -12,9 +12,7 @@ package edu.eci.arsw.threads;
 public class CountThreadsMain {
     
     public static void main(String a[]){
-<<<<<<< HEAD
-        
-=======
+
 
         Thread t1 = new edu.eci.arsw.threads.CountThread(0, 99);
         Thread t2 = new edu.eci.arsw.threads.CountThread(99, 199);
@@ -23,7 +21,7 @@ public class CountThreadsMain {
         t2.start();
         t3.start();
 
->>>>>>> 12ad80d9abe8aeb65df9350446c34687e7689638
+
     }
     
 }
