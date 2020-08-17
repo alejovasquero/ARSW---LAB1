@@ -10,8 +10,6 @@ package edu.eci.arsw.threads;
  * @author hcadavid
  */
 public class CountThread extends Thread{
-
-
     private int left;
     private int right;
     public CountThread(int left, int right){
@@ -26,5 +24,4 @@ public class CountThread extends Thread{
             System.out.println(i);
         }
     }
-
 }

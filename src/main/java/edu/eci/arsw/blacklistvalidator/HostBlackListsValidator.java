@@ -34,14 +34,14 @@ public class HostBlackListsValidator {
      * @return  Blacklists numbers where the given host's IP address was found.
      */
     public List<Integer> checkHost(String ipaddress, int threads){
-        int ocurrencesCount=0;
-
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
         int checkedListsCount=0;
         int n = skds.getRegisteredServersCount()-1;
         List<BlackListThread> tr = createCheckThreads(n, threads, ipaddress);
         solveWithThreads(tr);
+        List<Integer> serversFound = joinOcurrences(tr);
         checkedListsCount = BlackListThread.listsChecked.get();
+        int ocurrencesCount=serversFound.size();
         if (ocurrencesCount>=BLACK_LIST_ALARM_COUNT){
             skds.reportAsNotTrustworthy(ipaddress);
         }
@@ -49,7 +49,7 @@ public class HostBlackListsValidator {
             skds.reportAsTrustworthy(ipaddress);
         }
         LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
-        return joinOcurrences(tr);
+        return serversFound;
     }
     
 

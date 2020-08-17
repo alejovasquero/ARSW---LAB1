@@ -7,121 +7,198 @@
 
 ____________
 
-## PARTE 1 - Introduction to threads in JAVA
+#### Parte 1 - Introduction to threads in JAVA
 
-1. In agreement with the lectures, complete the classes CountThread, so that they define the life cycle of a thread that prints the numbers between A and B on the screen.
-  
-  ```
-Codigo
-  ```
+1. Implementación de clase CountThread, cuyo objetivo es imprimir los números entre un rango dado A y B.
 
-2. Complete the main method of the CountMainThreads class so that: 
-  1. Create 3 threads of type CountThread, assigning the first interval [0..99], the second [99..199], and the third [200..299]. 
-  
-  ```
-Codigo
-  ```
-  
-  2. Start the three threads with start(). Run and check the output on the screen. 
-  
-  Cuando el hilo se ejecuta con el metodo start() se crea un nuevo subproceso. Podemos ver que ejecutando varias veces el metodo principal, diferentes resultados se ven reflejados, ya que no estan sincronizados por el procesador. Vemos que se puede ejecutar el tercer hilo de primeras, mientras que el primero se ejecuta despues
-  
-  ***los hilos se interrumpen***
-![hilo3](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(1).png)
+      ```
+    public class CountThread extends Thread{
+        private int left;
+        private int right;
+    
+        public CountThread(int left, int right){
+            super();
+            this.left=left;
+            this.right=right;
+        }
+    
+        @Override
+        public void run() {
+            for(int i=left; i<right ;i++){
+                System.out.println(i);
+            }
+        }
+    }
+      ```
 
-***El primer hilo se ve interrumpido por el segundo***
-![hilo4](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart%20(2).png)
+2. Completar el método main de manera que: 
+    1. Cree 3 threads de tipo CountThread, asignando el primer intervalo de  [0..99], el segundo de  [99..199], y el tercero de  [200..299].
+    
+         ```
+           Thread t1 = new CountThread(0, 99);
+           Thread t2 = new CountThread(99, 199);
+           Thread t3 = new CountThread(200, 299);
+         ```
+    2. Inicie los 3 threads con **start()**. Corra y mire el resultado en pantalla.
+    
+          Cuando el hilo se ejecuta con el metodo start() se crea un nuevo subproceso. Podemos ver que ejecutando varias veces el método principal, diferentes resultados se ven reflejados, ya que no estan sincronizados por el procesador. Vemos que se puede ejecutar el tercer hilo de primeras, mientras que el primero se ejecuta después el segundo.
+  
+        ***Los hilos se interrumpen***
+        
+        ![](img/PARTE1/startP1.png)
+        
+        Vemos la ejecución del hilo 2 se ve interrumpida por la ejecución del hilo 1. Esto indica que existen distintos procesos ligeros en el computador.
 
-***El primer hilo se ve interrumpido por el tercero***
-![hilo5](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagestart.png)
-  
-  
-  
-  3. Change the beginning with start() to run(). How does the output change? Why?
-  
-Usando run() para ejecutar los hilos, podemos verificar que se ejecutan sobre el hilo principal y el procesador controla los hilos, permitiendo que se ejecuten dependiendo de la orden que tienen.
+        ***El primer hilo se ve interrumpido por el segundo***
+        
+        ![](img/PARTE1/startP2.png)
 
-![hilo2](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(2).png)
+        ***El primer hilo se ve interrumpido por el tercero***
+        
+        ![](img/PARTE1/startP3.png)
+          
+  3. Cambie el inicio de los hilos de **start()** a **run()**. ¿Qué pasa? ¿Por qué?
+  
+        Usando run() para ejecutar los hilos, podemos verificar que se ejecutan sobre el hilo principal, por lo que no se han creado otros procesos que nos beneficien de concurrencia.
 
-![hilo1](https://github.com/alejovasquero/ARSW---LAB1/blob/master/img/PARTE1/MicrosoftTeams-imagerun%20(1).png)
+        ![](img/PARTE1/runP1.png)
+
+        ![](img/PARTE1/runP2.png)
+        
+        Vemos que hay un orden secuencial, por lo que los números siguen el orden en el que fueron ejecutados los métodos **run()**.
+      
 ________________
 
-### Prerequisites
+#### Part II - Black List Search Exercise
 
-What things you need to install the software and how to install them
+Vamos a refactorizar el código principal para que pueda explotar las capacidades multo-core del procesador. 
 
+1. Cree la clase Thread, que busque en un segmento de servidores.
+
+    ```
+      public class BlackListThread extends Thread
+    ```
+
+2. Añadir al método **checkHost()** la capacidad de resolver la búsqueda con N threads, de manera que sea posible saber la cantidad de servidores encontrador por cada thread.
+    
+    ```
+      public List<Integer> checkHost(String ipaddress, int threads)
+    ```
+
+
+________________
+
+#### Part III - Discussion
+
+Una estrategia sencilla para saber si ya se han encontrado el número de servidores (**BLACK_LIST_ALARM_COUNT**)
+es crear una variable global que todos los threads puedan leer y escribir, y que indique la cantidad de servidores que han sido exitosos.
 ```
-Give examples
+  for(int i = left; i<=right  &&  ocurrences < BLACK_LIST_ALARM_COUNT; i++)
+      if(HostBlacklistsDataSourceFacade.getInstance().isInBlackListServer(i, ip)){
+          ocurrences++;
+      }
 ```
+La varibale ***ocurrences*** es una variable global en la que todos los thredas pueden escribir, y constituye un mecanismo de interacción indirecta entre ellos.
 
-### Installing
+PROBLEMAS:
+Con estas variables compartidas obtenemos el problema de proteger secciones críticas, lo que implica usar mecanismos de exlusión mutua para que solo un thread use el dato.
+Si varios threads usan la variable al tiempo, el resultado de final de esa variable podría ser inesperado.
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+Una solución para este problema es el uso de la declaración synchronized, que usa el lock de algún objeto para garantizar exclusión mutua a el estado del objeto. Usaremos el propio lock de la variable para lograrlo.
 ```
-Give the example
-```
+  private static Integer ocurrences = 0;
+  ...
+  boolean taskOver = false;
+  for(int i = left; i<=right  &&  !taskOver; i++){
+      synchronized (ocurrences){
+          if(ocurrences < BLACK_LIST_ALARM_COUNT){
+              if(HostBlacklistsDataSourceFacade.getInstance().isInBlackListServer(i, ip)){
+                  ocurrences++;
+              }
+          } else {
+              taskOver = true;
+          }
+      }          
+  }
+```  
+Esto nos garantiza exclusión mutua entre todos los threads a la hora de usar la variable, por lo que solo un thread será capaz de alterar el estado a la vez.
+________________
 
-And repeat
+#### Part IV - Performance Evaluation
 
-```
-until finished
-```
+Vamos a tomar el tiempo mde ejecución del programa con una cantidad variable de threads. Como fuente de información tomaremos a ***JVisualVM***.
 
-End with an example of getting some data out of the system or using it for a little demo
+1. Con ***1*** thread. 
 
-## Running the tests
+    Vemos que el tiempo que le lleva completar el programa es de 139 segundos.
+    
+    ![](img/PARTE4/1Snap.PNG)
+    
+    El uso de CPU es muy bajo, llegando al 0% de uso. Un uso de memoria de 26MB.
+    
+    ![](img/PARTE4/1running.PNG)
 
-Explain how to run the automated tests for this system
+2. Con tantos threads como núcleos del computador. En nuestro caso java nos arroja que tenemos 4 núcleos.
 
-### Break down into end to end tests
+    ``` 
+      List<Integer> blackListOcurrences=hblv.checkHost("202.24.34.55", Runtime.getRuntime().availableProcessors());
+    ``` 
+   
+   Vemos que el tiempo que le lleva completar el programa es de 38 segundos.
+       
+     ![](img/PARTE4/RuntimeSnap.PNG)
+       
+   El uso de CPU oscila entre 1,9% y 2,4%. Un uso de memoria de 34MB.
+       
+     ![](img/PARTE4/runRunning.PNG)
+     
+     
+3. Tantos threads como el doble de núcleos.
 
-Explain what these tests test and why
+   Vemos que el tiempo que le lleva completar el programa es de 21 segundos.
+       
+     ![](img/PARTE4/2RuntimeSnap.PNG)
+       
+   El uso de CPU llega al 8%. Un uso de memoria de 11MB.
+       
+     ![](img/PARTE4/2runRunning.PNG)
 
-```
-Give an example
-```
+4. Con ***50*** threads. 
 
-### And coding style tests
+    Vemos que el tiempo que le lleva completar el programa es de 13 segundos.
+           
+      ![](img/PARTE4/RuntimeSnap.PNG)
+           
+    El uso de CPU llega al 13,3%. Un uso de memoria de 11,5MB.
+           
+      ![](img/PARTE4/runRunning.PNG)
 
-Explain what these tests test and why
 
-```
-Give an example
-```
+5. Con ***100*** threads.
 
-## Deployment
+    Vemos que el tiempo que le lleva completar el programa es de 11 segundos.
+               
+      ![](img/PARTE4/100Snap.PNG)
+               
+    El uso de CPU llega al 22,2%. Un uso de memoria de 11,9MB.
+               
+      ![](img/PARTE4/100running.PNG)
+      
+##### Resumen
 
-Add additional notes about how to deploy this on a live system
+Haciendo un gráfica de tiempo vs threads podemos ver que la mejora en tiempo tiende a ser nula entre más threads añadimos.
 
-## Built With
+![](img/PARTE4/ThvsTime.png)
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+________________
 
-## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+## Construido con
 
-## Versioning
+* [Maven](https://maven.apache.org/) - Manejo de dependencias
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
-## Authors
+## Contribuciones
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* **Alejandro Vasquez** - *Extender* - [alejovasquero](https://github.com/alejovasquero)
+* **Michael Ballesteros** - *Extender* - [Wasawsky](https://github.com/Wasawsky)

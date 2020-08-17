@@ -14,9 +14,9 @@ public class CountThreadsMain {
     public static void main(String a[]){
 
 
-        Thread t1 = new edu.eci.arsw.threads.CountThread(0, 99);
-        Thread t2 = new edu.eci.arsw.threads.CountThread(99, 199);
-        Thread t3 = new edu.eci.arsw.threads.CountThread(200, 299);
+        Thread t1 = new CountThread(0, 99);
+        Thread t2 = new CountThread(99, 199);
+        Thread t3 = new CountThread(200, 299);
         t1.start();
         t2.start();
         t3.start();
