@@ -192,6 +192,17 @@ Haciendo un gráfica de tiempo vs threads podemos ver que la mejora en tiempo ti
 
 ________________
 
+Según la ley de Amdahls, donde S(n) es la mejora teórica del rendimiento, P la fracción paralela del algoritmo, y n el número de subprocesos, cuanto mayor n, mejor debe ser esta mejora. ¿Por qué no se logra el mejor rendimiento con los 500 subprocesos? ¿Cómo se compara este rendimiento cuando se utiliza 200 ?.
+
+- Porque el procesador esta limitado por el tiempo en que se usa, es decir, mientras mas subprocesos se hagan, igualmente se va a mantener el procesador corriendo todos los subprocesos. Esto lo podemos ver en la primera parte de la grafica, mientras aumentan los subprocesos disminuye el tiempo de ejecucion, pero despues comienza a tender un limite en el tiempo de ejecucion.
+
+¿Cómo se comporta la solución utilizando tantos subprocesos de procesamiento como núcleos en comparación con el resultado de usar el doble?
+
+- Podria aumentar el rendimiento de la aplicacion en un 50%, aunque podemos ver que despues tiende a mantenerse sobre cierto limite, donde es donde se explica el tiempo que se usa el procesador para los subprocesos.
+
+De acuerdo con lo anterior, si para este problema en lugar de 100 subprocesos en una sola CPU se podría utilizar 1 subproceso en cada una de las 100 máquinas hipotéticas, Amdahls ley se aplicaría mejor ?. Si se utilizan roscas x en lugar de máquinas distribuidas 100/x (donde x es el número de núcleos de estas máquinas), ¿se mejoraría? Explica tu respuesta.
+
+- En la grafica, se puede ver que cuando se usan los 100 subprocesos, tiende a permanecer igual que cuando se usaban los 50 subprocesos, no cambia mucho el tiempo estimado, en ese orden de ideas, si existieran cada proceso por maquina con sus nucleos, no habria mucha diferencia, ya que sigue el tiempo en que se usa el procesador de igual manera como si tuviera mas nucleos
 
 ## Construido con
 
